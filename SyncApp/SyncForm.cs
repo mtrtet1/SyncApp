@@ -18,7 +18,7 @@ namespace SyncApp
             _databaseService = new DatabaseService(_configService.DbConnectionString);
             _apiService = new ApiService(_configService.ApiUrl, _configService.ApiToken);
 
-            SetupSyncTimer();
+            //SetupSyncTimer();
         }
 
         private void btnSync_Click(object sender, EventArgs e)
@@ -45,7 +45,7 @@ namespace SyncApp
             DataTable categories = _databaseService.GetCategories();
             foreach (DataRow category in categories.Rows)
             {
-                _apiService.SyncCategory(category);
+                _apiService.SyncCategory(MapCategory(category));
             }
         }
 
@@ -54,7 +54,7 @@ namespace SyncApp
             DataTable products = _databaseService.GetProducts();
             foreach (DataRow product in products.Rows)
             {
-                _apiService.SyncProduct(product);
+                _apiService.SyncProduct(MapProduct(product));
             }
         }
 
@@ -63,8 +63,42 @@ namespace SyncApp
             DataTable orders = _databaseService.GetOrders();
             foreach (DataRow order in orders.Rows)
             {
-                _apiService.SyncOrder(order);
+                _apiService.SyncOrder(MapOrder(order));
             }
+        }
+
+        private Dictionary<string, object> MapCategory(DataRow row)
+        {
+            return new Dictionary<string, object>
+            {
+                { "id", row["CategoryID"] },
+                { "name", row["CategoryName"] },
+                { "description", row["Description"] }
+            };
+        }
+
+        private Dictionary<string, object> MapProduct(DataRow row)
+        {
+            return new Dictionary<string, object>
+            {
+                { "id", row["ProductID"] },
+                { "name", row["ProductName"] },
+                { "price", row["Price"] },
+                { "stock", row["StockQuantity"] },
+                { "category_id", row["CategoryID"] }
+            };
+        }
+
+        private Dictionary<string, object> MapOrder(DataRow row)
+        {
+            return new Dictionary<string, object>
+            {
+                { "id", row["OrderID"] },
+                { "customer", row["CustomerName"] },
+                { "total", row["TotalAmount"] },
+                { "status", row["Status"] },
+                { "date", row["OrderDate"] }
+            };
         }
     }
 }

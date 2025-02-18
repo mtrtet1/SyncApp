@@ -20,19 +20,19 @@ namespace SyncApp
             _apiBaseUrl = apiBaseUrl;
         }
 
-        public void SyncCategory(DataRow category)
+        public void SyncCategory(Dictionary<string, object> category)
         {
             var json = JsonSerializer.Serialize(category);
             SendToApi("/categories", json);
         }
 
-        public void SyncProduct(DataRow product)
+        public void SyncProduct(Dictionary<string, object> product)
         {
             var json = JsonSerializer.Serialize(product);
             SendToApi("/products", json);
         }
 
-        public void SyncOrder(DataRow order)
+        public void SyncOrder(Dictionary<string, object> order)
         {
             var json = JsonSerializer.Serialize(order);
             SendToApi("/orders", json);
