@@ -35,9 +35,12 @@ namespace SyncApp
 
         private void StartSync()
         {
-            SyncCategories();
-            SyncProducts();
-            SyncOrders();
+
+            _apiService.GetOrders();
+
+            //SyncCategories();
+            //SyncProducts();
+            //SyncOrders();
         }
 
         private void SyncCategories()
@@ -94,10 +97,25 @@ namespace SyncApp
             return new Dictionary<string, object>
             {
                 { "id", row["OrderID"] },
-                { "customer", row["CustomerName"] },
-                { "total", row["TotalAmount"] },
-                { "status", row["Status"] },
-                { "date", row["OrderDate"] }
+                { "product_order_id", row["ProductOrderID"] },
+                { "order_date", row["OrderDate"] },
+                { "customer_id", row["CustomerID"] },
+                { "is_guest", row["IsGuest"] },
+                { "product_id", row["ProductID"] },
+                { "product_price", row["ProductPrice"] },
+                { "coupon_price", row["CouponPrice"] },
+                { "delivery_price", row["DeliveryPrice"] },
+                { "tax_price", row["TaxPrice"] },
+                { "final_price", row["FinalPrice"] },
+                { "payment_type", row["PaymentType"] },
+                { "payment_status", row["PaymentStatus"] },
+                { "delivery_status", row["DeliveredStatus"] },
+                { "delivery_date", row["DeliveryDate"] },
+                { "return_status", row["ReturnStatus"] },
+                { "return_date", row["ReturnDate"] },
+                { "store_id", row["StoreID"] },
+                { "created_at", row["CreatedAt"] },
+                { "updated_at", row["UpdatedAt"] }
             };
         }
     }

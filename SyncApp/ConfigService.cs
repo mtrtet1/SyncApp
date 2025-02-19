@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace SyncApp
 {
@@ -26,6 +21,10 @@ namespace SyncApp
             else
             {
                 var defaultConfig = new ConfigService();
+
+                defaultConfig.ApiUrl = "https://storizone.com";
+                defaultConfig.ApiToken = "1234";
+
                 File.WriteAllText(ConfigFilePath, JsonSerializer.Serialize(defaultConfig));
                 return defaultConfig;
             }
