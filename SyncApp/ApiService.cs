@@ -64,13 +64,13 @@ namespace SyncApp
         public void SyncCategory(Dictionary<string, object> category)
         {
             var json = JsonSerializer.Serialize(category);
-            SendToApi("/categories", json);
+            SendToApi("/main_categories", json);
         }
 
         public void SyncProduct(Dictionary<string, object> product)
         {
             var json = JsonSerializer.Serialize(product);
-            SendToApi("/products", json);
+            SendToApi("//products/add", json);
         }
 
         public void SyncOrder(Dictionary<string, object> order)

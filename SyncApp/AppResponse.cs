@@ -144,6 +144,22 @@ namespace SyncApp
         //[JsonPropertyName("variant_name")]
         //public string VariantName { get; set; }
     }
+    public class ProductUpdateRequest
+    {
+        public string Name { get; set; }
+        public string Category { get; set; }
+        public string SubCategory { get; set; }
+        public string Brand { get; set; }
+        public string Label { get; set; }
+        public string Shipping { get; set; }
+        public string Tax { get; set; }
+        public decimal Price { get; set; }
+        public decimal? SalePrice { get; set; }
+        public string Description { get; set; }
+        public int? Stock { get; set; }
+        public int? LowStockThreshold { get; set; }
+        public List<string> Images { get; set; }
+    }
 
 
 }

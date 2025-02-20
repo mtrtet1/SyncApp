@@ -74,7 +74,7 @@ namespace SyncApp
         {
             return new Dictionary<string, object>
             {
-                { "id", row["CategoryID"] },
+                //{ "id", row["CategoryID"] },
                 { "name", row["CategoryName"] },
                 { "description", row["Description"] }
             };
@@ -86,9 +86,18 @@ namespace SyncApp
             {
                 { "id", row["ProductID"] },
                 { "name", row["ProductName"] },
+                { "category", row["Category"] },//name
+                { "sub_category", row["SubCategory"] },
+                { "brand", row["Brand"] },
+                { "label", row["Label"] },
+                { "shipping", row["Shipping"] },
+                { "tax", row["Tax"] },
                 { "price", row["Price"] },
+                { "sale_price", row["SalePrice"] },
+                { "description", row["Description"] },
                 { "stock", row["StockQuantity"] },
-                { "category_id", row["CategoryID"] }
+                { "low_stock_threshold", row["LowStockThreshold"] },
+                { "images", row["Images"] }
             };
         }
 
