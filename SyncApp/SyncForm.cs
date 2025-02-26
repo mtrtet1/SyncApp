@@ -2,6 +2,7 @@ using System.Data;
 using System.Windows.Forms.Design;
 using System.Timers;
 using Timer = System.Timers.Timer;
+using System;
 
 namespace SyncApp
 {
@@ -39,7 +40,7 @@ namespace SyncApp
             _apiService.GetOrders();
 
             //SyncCategories();
-            //SyncProducts();
+            SyncProducts();
             //SyncOrders();
         }
 
@@ -52,12 +53,13 @@ namespace SyncApp
             }
         }
 
-        private void SyncProducts()
+        private async void SyncProducts()
         {
             DataTable products = _databaseService.GetProducts();
             foreach (DataRow product in products.Rows)
             {
-                _apiService.SyncProduct(MapProduct(product));
+                var mapped_product = MapProduct(product);
+                var res = await _apiService.SyncProduct(mapped_product);
             }
         }
 
@@ -82,24 +84,36 @@ namespace SyncApp
 
         private Dictionary<string, object> MapProduct(DataRow row)
         {
-            return new Dictionary<string, object>
+            var DD= new Dictionary<string, object>
             {
-                { "id", row["ProductID"] },
-                { "name", row["ProductName"] },
-                { "category", row["Category"] },//name
-                { "sub_category", row["SubCategory"] },
-                { "brand", row["Brand"] },
-                { "label", row["Label"] },
-                { "shipping", row["Shipping"] },
-                { "tax", row["Tax"] },
-                { "price", row["Price"] },
-                { "sale_price", row["SalePrice"] },
-                { "description", row["Description"] },
-                { "stock", row["StockQuantity"] },
-                { "low_stock_threshold", row["LowStockThreshold"] },
-                { "images", row["Images"] }
+                { "guid", row["guid"] },
+                { "name", Convert.IsDBNull(row["NameE"]) ? row["NameA"] : row["NameE"] },
+                { "name_ar", Convert.IsDBNull(row["NameA"]) ? "" : row["NameA"] },
+                { "category", Convert.IsDBNull(row["MainCategory"]) ? "" : row["MainCategory"] },
+                { "sub_category", Convert.IsDBNull(row["SubCategory"]) ? "" : row["SubCategory"] },
+                { "tax", Convert.IsDBNull(row["VAT"]) ? 0 : row["VAT"] },
+                { "price", Convert.IsDBNull(row["U1Price1"]) ? 0 : row["U1Price1"] },
+                { "description", Convert.IsDBNull(row["Spec"]) ? "" : row["Spec"] },
+                //{ "images", Convert.IsDBNull(row["Mat_Image"]) ? "" : row["Mat_Image"] }
+
+
+
+                //{ "brand", Convert.IsDBNull(row["MatCompany_ID"]) ? "" : row["MatCompany_ID"] },
+                //{ "label", Convert.IsDBNull(row["Code"]) ? "" : row["Code"] },
+                //{ "shipping", Convert.IsDBNull(row["Location"]) ? "" : row["Location"] },
+                //{ "sale_price", Convert.IsDBNull(row["U1Price1"]) ? 0 : row["U1Price1"] },
+                //{ "stock", Convert.IsDBNull(row["MinQty"]) ? 0 : row["MinQty"] },
+                //{ "low_stock_threshold", Convert.IsDBNull(row["OrderQty"]) ? 0 : row["OrderQty"] },
             };
+
+            if (!Convert.IsDBNull(row["Mat_Image"]))
+            {
+                DD["images"] = new List<string>() { "data:image/png;base64," + Convert.ToBase64String((byte[])row["Mat_Image"]) };
+            }
+
+            return DD;
         }
+
 
         private Dictionary<string, object> MapOrder(DataRow row)
         {

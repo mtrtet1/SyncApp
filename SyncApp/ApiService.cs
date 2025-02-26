@@ -61,28 +61,59 @@ namespace SyncApp
                 MessageBox.Show($"خطأ في التحديث : {response.ReasonPhrase}");
             }
         }
-        public void SyncCategory(Dictionary<string, object> category)
+        public async void SyncCategory(Dictionary<string, object> category)
         {
             var json = JsonSerializer.Serialize(category);
-            SendToApi("/main_categories", json);
+            await SendToApi("/main_categories", json);
         }
 
-        public void SyncProduct(Dictionary<string, object> product)
+        public async Task<HttpResponseMessage> SyncProduct(Dictionary<string, object> product)
         {
-            var json = JsonSerializer.Serialize(product);
-            SendToApi("//products/add", json);
+            //var json = JsonSerializer.Serialize(product);
+            var json = JsonSerializer.Serialize(product, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase, // Match Laravel's expected field names
+                WriteIndented = true // Optional: Pretty-print JSON for debugging
+            });
+
+            // Debug: Print JSON before sending
+            Console.WriteLine("Sending JSON: " + json);
+
+            var response = await SendToApi("/products/add", json);
+            string responseBody = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                var res = JsonSerializer.Deserialize<AppResponse>(responseBody);
+                if (res.success)
+                {
+                    MessageBox.Show(responseBody);
+                }
+                else
+                {
+                    MessageBox.Show(res.message);
+                    Console.WriteLine(res.data);
+                }
+            }
+            else
+            {
+                MessageBox.Show($"خطأ في التحديث : {response.ReasonPhrase}");
+            }
+
+
+            return response;  
         }
 
-        public void SyncOrder(Dictionary<string, object> order)
+        public async void SyncOrder(Dictionary<string, object> order)
         {
             var json = JsonSerializer.Serialize(order);
-            SendToApi("/orders", json);
+            await SendToApi("/orders", json);
         }
 
-        private void SendToApi(string endpoint, string json)
+        private async Task<HttpResponseMessage> SendToApi(string endpoint, string json)
         {
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            _httpClient.PostAsync(_apiBaseUrl + "/api" + endpoint, content);
+
+            return await _httpClient.PostAsync(_apiBaseUrl + "/api" + endpoint, content);
         }
 
         private async Task<HttpResponseMessage> GetFromApi(string endpoint)
