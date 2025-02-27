@@ -67,7 +67,7 @@ namespace SyncApp
             await SendToApi("/main_categories", json);
         }
 
-        public async Task<HttpResponseMessage> SyncProduct(Dictionary<string, object> product)
+        public async Task<string> SyncProduct(Dictionary<string, object> product)
         {
             //var json = JsonSerializer.Serialize(product);
             var json = JsonSerializer.Serialize(product, new JsonSerializerOptions
@@ -76,31 +76,28 @@ namespace SyncApp
                 WriteIndented = true // Optional: Pretty-print JSON for debugging
             });
 
-            // Debug: Print JSON before sending
-            Console.WriteLine("Sending JSON: " + json);
-
             var response = await SendToApi("/products/add", json);
             string responseBody = await response.Content.ReadAsStringAsync();
+            AppResponse? res = null;
+
+            try
+            {
+                res = JsonSerializer.Deserialize<AppResponse>(responseBody);
+            }
+            catch (Exception ex)
+            {
+
+            }
             if (response.IsSuccessStatusCode)
             {
-                var res = JsonSerializer.Deserialize<AppResponse>(responseBody);
-                if (res.success)
-                {
-                    MessageBox.Show(responseBody);
-                }
-                else
-                {
-                    MessageBox.Show(res.message);
-                    Console.WriteLine(res.data);
-                }
             }
             else
             {
-                MessageBox.Show($"خطأ في التحديث : {response.ReasonPhrase}");
+                //MessageBox.Show($"خطأ في التحديث : {response.ReasonPhrase}");
             }
 
 
-            return response;  
+            return res != null ? res.message : "Deserialize Error Ex";  
         }
 
         public async void SyncOrder(Dictionary<string, object> order)

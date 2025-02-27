@@ -37,7 +37,7 @@ namespace SyncApp
         private void StartSync()
         {
 
-            _apiService.GetOrders();
+            //_apiService.GetOrders();
 
             //SyncCategories();
             SyncProducts();
@@ -55,12 +55,16 @@ namespace SyncApp
 
         private async void SyncProducts()
         {
+            int Created = 0;
             DataTable products = _databaseService.GetProducts();
             foreach (DataRow product in products.Rows)
             {
                 var mapped_product = MapProduct(product);
                 var res = await _apiService.SyncProduct(mapped_product);
+                if (res == "Created") Created++;
+                rtbResult.Text += res + "\n";
             }
+            rtbResult.Text += Created + "\n";
         }
 
         private void SyncOrders()

@@ -55,7 +55,7 @@ MaxLevel AS (
     GROUP BY Mat_ID
 )
 SELECT 
-    top 10
+    --top 100
     m.ID AS guid,
     m.Code ,
     m.NameA ,
@@ -78,7 +78,7 @@ LEFT JOIN CatHierarchy sub
   ON sub.Mat_ID = root.Mat_ID AND sub.Level = maxl.MaxLevel - 1
 JOIN FOG.dbo.Mat m ON m.ID = maxl.Mat_ID
 LEFT JOIN FOG.dbo.Images i ON m.Images_ID = i.ID AND i.Type = 'Mat'
-where i.Image  is not null
+--where i.Image  is not null
 
 ";
             return ExecuteQuery(sql);

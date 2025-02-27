@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             btnSync = new Button();
+            rtbResult = new RichTextBox();
             SuspendLayout();
             // 
             // btnSync
@@ -41,11 +42,20 @@
             btnSync.UseVisualStyleBackColor = true;
             btnSync.Click += btnSync_Click;
             // 
+            // rtbResult
+            // 
+            rtbResult.Location = new Point(12, 280);
+            rtbResult.Name = "rtbResult";
+            rtbResult.Size = new Size(334, 158);
+            rtbResult.TabIndex = 1;
+            rtbResult.Text = "";
+            // 
             // SyncForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(rtbResult);
             Controls.Add(btnSync);
             Name = "SyncForm";
             Text = "Form1";
@@ -55,5 +65,6 @@
         #endregion
 
         private Button btnSync;
+        private RichTextBox rtbResult;
     }
 }
