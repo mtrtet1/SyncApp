@@ -33,8 +33,8 @@ WITH CatHierarchy AS (
        mi.NameA AS CatName,
        mi.MatIndex_ID AS ParentID,
        0 AS Level
-    FROM FOG.dbo.Mat m
-    JOIN FOG.dbo.MatIndex mi ON m.MatIndex_ID = mi.ID
+    FROM Mat m
+    JOIN MatIndex mi ON m.MatIndex_ID = mi.ID
 
     UNION ALL
 
@@ -46,7 +46,7 @@ WITH CatHierarchy AS (
        p.MatIndex_ID AS ParentID,
        ch.Level + 1 AS Level
     FROM CatHierarchy ch
-    JOIN FOG.dbo.MatIndex p ON ch.ParentID = p.ID
+    JOIN MatIndex p ON ch.ParentID = p.ID
 ),
 MaxLevel AS (
     -- Determine the highest level reached (the root) for each product
@@ -76,8 +76,8 @@ JOIN CatHierarchy root
   ON maxl.Mat_ID = root.Mat_ID AND root.Level = maxl.MaxLevel
 LEFT JOIN CatHierarchy sub 
   ON sub.Mat_ID = root.Mat_ID AND sub.Level = maxl.MaxLevel - 1
-JOIN FOG.dbo.Mat m ON m.ID = maxl.Mat_ID
-LEFT JOIN FOG.dbo.Images i ON m.Images_ID = i.ID AND i.Type = 'Mat'
+JOIN Mat m ON m.ID = maxl.Mat_ID
+LEFT JOIN Images i ON m.Images_ID = i.ID AND i.Type = 'Mat'
 --where i.Image  is not null
 
 ";

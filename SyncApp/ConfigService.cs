@@ -23,8 +23,8 @@ namespace SyncApp
                 var defaultConfig = new ConfigService();
 
                 defaultConfig.ApiUrl = "https://storizone.com";
-                defaultConfig.ApiToken = "1234";
-                defaultConfig.DbConnectionString = "Data Source=MMRAISH;Initial Catalog=FOG;Integrated Security=true;";
+                defaultConfig.ApiToken = "e4dc10f4-9488-4df7-a23c-feb538e694c5";
+                defaultConfig.DbConnectionString = "Data Source=MMRAISH;Initial Catalog=Kids;Integrated Security=true;";
 
                 File.WriteAllText(ConfigFilePath, JsonSerializer.Serialize(defaultConfig));
                 return defaultConfig;
